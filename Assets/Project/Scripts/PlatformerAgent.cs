@@ -19,22 +19,49 @@ public class PlatformerAgent : Agent
 
     public override void CollectObservations()
     {
-        base.CollectObservations();
+        AddVectorObs(IsGrounded(m_Agent.transform.position) ? 1 : 0);
+        AddVectorObs(IsHitWall(m_Agent.transform.position) ? 1 : 0);
     }
 
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        base.AgentAction(vectorAction, textAction);
+        if (IsGrounded(m_Agent.transform.position))
+        {
+            playerCharacter.SetHorizontalMovement(5);
+        }
+
+        int action = Mathf.FloorToInt(vectorAction[0]);
+        if (action == 0 && IsGrounded(m_Agent.transform.position))
+        {
+            SetReward(1);
+        }
+        else if (action == 1 && IsGrounded(m_Agent.transform.position))
+        {
+            playerCharacter.SetMoveVector(new Vector2(15, 15));
+            if (IsHitWall(m_Agent.transform.position))
+            {
+                AddReward(1);
+            }
+            else
+            {
+                AddReward(-5);
+            }
+        }
+
+        if (m_Goal.GetComponent<CheckpointChecker>().enteredCheckpoint)
+        {
+            Done();
+        }
     }
 
     public override void AgentReset()
     {
-        base.AgentReset();
+        m_Agent.transform.position = initialPosition;
     }
 
     public override void AgentOnDone()
     {
-        base.AgentOnDone();
+
     }
 
     public bool IsGrounded(Vector2 position)

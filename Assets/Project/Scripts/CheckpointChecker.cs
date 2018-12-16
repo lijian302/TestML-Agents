@@ -9,7 +9,7 @@ public class CheckpointChecker : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Player")
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             enteredCheckpoint = true;
         }
@@ -17,7 +17,7 @@ public class CheckpointChecker : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Player")
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             enteredCheckpoint = false;
         }
